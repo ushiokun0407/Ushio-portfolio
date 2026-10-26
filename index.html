@@ -231,6 +231,7 @@
     <div id="shorts-feed" class="shorts-container h-full w-full overflow-y-scroll overflow-x-hidden space-y-0"></div>
   </div>
 
+  <!-- WORK ADD/EDIT MODAL -->
   <div id="work-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white border border-muji-border w-full max-w-lg p-6 space-y-6 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-muji-border pb-3">
@@ -253,16 +254,33 @@
             </select>
           </div>
           <div>
-            <label class="block mb-1">動画タイプ <span class="text-muji-red">*</span></label>
-            <select id="work-type" class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none">
-              <option value="youtube">YouTube URL</option>
-            </select>
+            <label class="block mb-1">動画入力タイプ <span class="text-muji-red">*</span></label>
+            <div class="flex items-center space-x-3 pt-2">
+              <label class="inline-flex items-center space-x-1 cursor-pointer">
+                <input type="radio" name="video-source-type" value="youtube" checked onchange="toggleVideoSourceInput()" class="accent-muji-red">
+                <span>YouTube URL</span>
+              </label>
+              <label class="inline-flex items-center space-x-1 cursor-pointer">
+                <input type="radio" name="video-source-type" value="device" onchange="toggleVideoSourceInput()" class="accent-muji-red">
+                <span>デバイスから指定</span>
+              </label>
+            </div>
           </div>
         </div>
-        <div>
+
+        <!-- YouTube Input -->
+        <div id="youtube-input-group">
           <label class="block mb-1">YouTube URL <span class="text-muji-red">*</span></label>
           <input type="url" id="work-youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none">
         </div>
+
+        <!-- Device File Input -->
+        <div id="device-input-group" class="hidden">
+          <label class="block mb-1">動画ファイルを選択 (MP4, MOV等)</label>
+          <input type="file" id="work-device-file" accept="video/*" class="w-full border border-muji-border p-2 bg-muji-bg text-xs">
+          <p class="text-[10px] text-muji-sub mt-1">※ローカルストレージ・端末ローカルファイル参照機能です。</p>
+        </div>
+
         <div>
           <label class="block mb-1">概要・解説文</label>
           <textarea id="work-desc" rows="3" class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none"></textarea>
@@ -279,6 +297,7 @@
     </div>
   </div>
 
+  <!-- SETTINGS MODAL -->
   <div id="settings-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white border border-muji-border w-full max-w-lg p-6 space-y-6 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-muji-border pb-3">
@@ -321,9 +340,9 @@
   <!-- FIREBASE & APP LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, onSnapshot, serverTimestamp, query, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase設定（うしおのプロジェクト: ushio-portfolio）
+    // Firebase設定 (ushio-portfolio)
     const firebaseConfig = {
       apiKey: "AIzaSyCYZC3XOe4wzFFH5bMdEKQJYxDhyPRXF08",
       authDomain: "ushio-portfolio.firebaseapp.com",
@@ -338,9 +357,10 @@
     const db = getFirestore(app);
 
     let works = [];
+    let commentsMap = {};
     let currentFilter = 'all';
     let isAdmin = false;
-    let passcode = localStorage.getItem('ushio_passcode') || '1234';
+    let passcode = 'u47Editor'; // パスワード統一
     let settings = {
       heroTagline: '高校生3年間で制作する\n100本の映像作品アーカイブ。',
       heroConcept: '「日常の一瞬を、表現へ。」視点と構成力で切り取る映像制作プロジェクト。',
@@ -356,7 +376,7 @@
     });
 
     function initRealtimeSync() {
-      // リアルタイムで動画リストを同期 (Firestore "videos" コレクション)
+      // リアルタイム動画同期
       const q = query(collection(db, 'videos'), orderBy('createdAt', 'desc'));
       onSnapshot(q, (snapshot) => {
         works = [];
@@ -364,19 +384,31 @@
           works.push({ id: docSnap.id, ...docSnap.data() });
         });
         renderWorks();
-      }, (error) => {
-        console.error("Firestore同期エラー:", error);
       });
 
-      // サイト設定のリアルタイム同期 (Firestore "settings" ドキュメント)
+      // リアルタイム設定同期
       const settingsRef = doc(db, 'settings', 'main');
       onSnapshot(settingsRef, (docSnap) => {
         if (docSnap.exists()) {
-          settings = docSnap.data();
+          const data = docSnap.data();
+          settings = { ...settings, ...data };
+          if (data.passcode) passcode = data.passcode;
         } else {
-          setDoc(settingsRef, settings);
+          setDoc(settingsRef, { ...settings, passcode });
         }
         renderSettings();
+      });
+
+      // リアルタイムコメント同期
+      const commentsQuery = query(collection(db, 'comments'), orderBy('createdAt', 'asc'));
+      onSnapshot(commentsQuery, (snapshot) => {
+        commentsMap = {};
+        snapshot.forEach((docSnap) => {
+          const c = docSnap.data();
+          if (!commentsMap[c.videoId]) commentsMap[c.videoId] = [];
+          commentsMap[c.videoId].push({ id: docSnap.id, ...c });
+        });
+        renderWorks();
       });
     }
 
@@ -404,14 +436,11 @@
       settings.profileText = document.getElementById('setting-profile-text').value;
 
       const newPass = document.getElementById('setting-passcode').value.trim();
-      if (newPass) {
-        passcode = newPass;
-        localStorage.setItem('ushio_passcode', passcode);
-      }
+      if (newPass) passcode = newPass;
 
-      await setDoc(doc(db, 'settings', 'main'), settings);
+      await setDoc(doc(db, 'settings', 'main'), { ...settings, passcode });
       closeSettingsModal();
-      alert('設定をクラウドに保存しました！全員の画面に即時反映されます。');
+      alert('設定をクラウドに保存しました！');
     };
 
     window.setYearFilter = function(year) {
@@ -454,30 +483,113 @@
           `<span class="px-2 py-0.5 bg-muji-bg text-[10px] font-bold text-muji-sub border border-muji-border">#${t}</span>`
         ).join(' ');
 
+        const likes = w.likes || 0;
+        const comments = commentsMap[w.id] || [];
+
+        let mediaHtml = '';
+        if (w.sourceType === 'device' && w.url) {
+          mediaHtml = `<video src="${w.url}" controls class="w-full h-full object-cover"></video>`;
+        } else {
+          mediaHtml = `<iframe src="${getEmbedUrl(w.url)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+        }
+
+        const commentsListHtml = comments.map(c => `
+          <div class="p-2 border-b border-muji-border/50 text-[11px] space-y-0.5">
+            <div class="flex justify-between text-muji-sub font-bold">
+              <span>${escapeHtml(c.name || '匿名')}</span>
+            </div>
+            <p class="text-muji-text font-normal">${escapeHtml(c.text)}</p>
+          </div>
+        `).join('');
+
         return `
           <div class="bg-white border border-muji-border overflow-hidden flex flex-col justify-between group">
-            <div class="relative bg-black aspect-video overflow-hidden">
-              <iframe src="${getEmbedUrl(w.url)}" class="w-full h-full border-0" allowfullscreen></iframe>
-              <span class="absolute top-2 left-2 px-2.5 py-1 bg-muji-red text-white font-en font-black text-[10px] uppercase">${w.year}</span>
-            </div>
-            <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
-              <div class="space-y-2">
+            <div>
+              <div class="relative bg-black aspect-video overflow-hidden">
+                ${mediaHtml}
+                <span class="absolute top-2 left-2 px-2.5 py-1 bg-muji-red text-white font-en font-black text-[10px] uppercase pointer-events-none">${w.year}</span>
+              </div>
+              <div class="p-5 space-y-3">
                 <h4 class="font-extrabold text-base leading-snug font-sans group-hover:text-muji-red transition">${escapeHtml(w.title)}</h4>
                 <p class="text-xs text-muji-sub font-bold leading-relaxed line-clamp-3">${escapeHtml(w.desc || '解説なし')}</p>
-              </div>
-              <div class="space-y-3 pt-2">
                 <div class="flex flex-wrap gap-1">${tagsHtml}</div>
-                ${isAdmin ? `
-                  <div class="flex justify-end space-x-2 pt-2 border-t border-muji-border">
-                    <button onclick="editWork('${w.id}')" class="text-xs font-bold text-muji-sub hover:text-muji-text">編集</button>
-                    <button onclick="deleteWork('${w.id}')" class="text-xs font-bold text-muji-red hover:underline">削除</button>
-                  </div>
-                ` : ''}
               </div>
+            </div>
+
+            <!-- LIKE & COMMENT CONTROLS -->
+            <div class="p-5 pt-0 space-y-3">
+              <div class="flex items-center justify-between border-t border-muji-border pt-3 text-xs font-bold">
+                <button onclick="likeWork('${w.id}')" class="flex items-center space-x-1 text-muji-sub hover:text-muji-red transition">
+                  <span>👍 グッド</span>
+                  <span class="bg-muji-bg px-2 py-0.5 border border-muji-border font-en font-black">${likes}</span>
+                </button>
+                <button onclick="toggleCommentBox('${w.id}')" class="flex items-center space-x-1 text-muji-sub hover:text-muji-text transition">
+                  <span>💬 コメント</span>
+                  <span class="bg-muji-bg px-2 py-0.5 border border-muji-border font-en font-black">${comments.length}</span>
+                </button>
+              </div>
+
+              <!-- COMMENT SECTION (HIDDEN BY DEFAULT) -->
+              <div id="comment-box-${w.id}" class="hidden space-y-3 pt-2 bg-muji-bg/50 p-3 border border-muji-border">
+                <div class="max-h-36 overflow-y-auto space-y-1">
+                  ${commentsListHtml.length > 0 ? commentsListHtml : '<p class="text-[11px] text-muji-sub italic">コメントはまだありません。</p>'}
+                </div>
+                <form onsubmit="postComment(event, '${w.id}')" class="space-y-2 pt-1">
+                  <input type="text" id="comment-name-${w.id}" placeholder="お名前 (任意)" class="w-full border border-muji-border p-1.5 text-[11px] bg-white focus:outline-none">
+                  <div class="flex space-x-2">
+                    <input type="text" id="comment-text-${w.id}" required placeholder="コメントを入力..." class="w-full border border-muji-border p-1.5 text-[11px] bg-white focus:outline-none">
+                    <button type="submit" class="px-3 py-1 bg-muji-red text-white text-[11px] font-bold whitespace-nowrap">送信</button>
+                  </div>
+                </form>
+              </div>
+
+              ${isAdmin ? `
+                <div class="flex justify-end space-x-2 pt-2 border-t border-muji-border">
+                  <button onclick="editWork('${w.id}')" class="text-xs font-bold text-muji-sub hover:text-muji-text">編集</button>
+                  <button onclick="deleteWork('${w.id}')" class="text-xs font-bold text-muji-red hover:underline">削除</button>
+                </div>
+              ` : ''}
             </div>
           </div>
         `;
       }).join('');
+    };
+
+    window.likeWork = async function(id) {
+      try {
+        await updateDoc(doc(db, 'videos', id), {
+          likes: increment(1)
+        });
+      } catch (err) {
+        console.error("Like error:", err);
+      }
+    };
+
+    window.toggleCommentBox = function(id) {
+      const box = document.getElementById(`comment-box-${id}`);
+      if (box) box.classList.toggle('hidden');
+    };
+
+    window.postComment = async function(e, videoId) {
+      e.preventDefault();
+      const nameInput = document.getElementById(`comment-name-${videoId}`);
+      const textInput = document.getElementById(`comment-text-${videoId}`);
+      const name = nameInput.value.trim() || '匿名';
+      const text = textInput.value.trim();
+
+      if (!text) return;
+
+      try {
+        await addDoc(collection(db, 'comments'), {
+          videoId,
+          name,
+          text,
+          createdAt: serverTimestamp()
+        });
+        textInput.value = '';
+      } catch (err) {
+        alert('コメント送信エラー: ' + err.message);
+      }
     };
 
     function getEmbedUrl(url) {
@@ -490,23 +602,49 @@
       return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
+    window.toggleVideoSourceInput = function() {
+      const selected = document.querySelector('input[name="video-source-type"]:checked').value;
+      if (selected === 'youtube') {
+        document.getElementById('youtube-input-group').classList.remove('hidden');
+        document.getElementById('device-input-group').classList.add('hidden');
+      } else {
+        document.getElementById('youtube-input-group').classList.add('hidden');
+        document.getElementById('device-input-group').classList.remove('hidden');
+      }
+    };
+
     window.saveWork = async function(e) {
       e.preventDefault();
       const id = document.getElementById('work-id').value;
       const title = document.getElementById('work-title').value;
       const year = document.getElementById('work-year').value;
-      const url = document.getElementById('work-youtube-url').value;
+      const sourceType = document.querySelector('input[name="video-source-type"]:checked').value;
+      let url = '';
+
+      if (sourceType === 'youtube') {
+        url = document.getElementById('work-youtube-url').value;
+      } else {
+        const fileInput = document.getElementById('work-device-file');
+        if (fileInput.files && fileInput.files[0]) {
+          url = URL.createObjectURL(fileInput.files[0]);
+        }
+      }
+
       const desc = document.getElementById('work-desc').value;
       const tags = document.getElementById('work-tags').value;
 
       try {
         if (id) {
-          await updateDoc(doc(db, 'videos', id), { title, year, url, desc, tags });
+          const updateData = { title, year, desc, tags };
+          if (url) updateData.url = url;
+          await updateDoc(doc(db, 'videos', id), updateData);
         } else {
-          await addDoc(collection(db, 'videos'), { title, year, type: 'youtube', url, desc, tags, createdAt: serverTimestamp() });
+          await addDoc(collection(db, 'videos'), {
+            title, year, sourceType, url, desc, tags, likes: 0, createdAt: serverTimestamp()
+          });
         }
         closeWorkModal();
-        alert('作品をクラウドに保存しました！');
+        alert('作品を保存しました！');
       } catch (err) {
         alert('保存エラー: ' + err.message);
       }
@@ -519,7 +657,7 @@
       document.getElementById('work-id').value = w.id;
       document.getElementById('work-title').value = w.title;
       document.getElementById('work-year').value = w.year;
-      document.getElementById('work-youtube-url').value = w.url;
+      document.getElementById('work-youtube-url').value = w.url || '';
       document.getElementById('work-desc').value = w.desc || '';
       document.getElementById('work-tags').value = w.tags || '';
       document.getElementById('work-modal').classList.remove('hidden');
@@ -562,26 +700,35 @@
       document.getElementById('modal-title').innerText = '動画作品を追加';
       document.getElementById('work-id').value = '';
       document.getElementById('work-form').reset();
+      toggleVideoSourceInput();
       document.getElementById('work-modal').classList.remove('hidden');
     };
     window.closeWorkModal = () => document.getElementById('work-modal').classList.add('hidden');
     window.openSettingsModal = () => document.getElementById('settings-modal').classList.remove('hidden');
     window.closeSettingsModal = () => document.getElementById('settings-modal').classList.add('hidden');
-    
+
     window.openShortsModal = function() {
       if (works.length === 0) { alert('動画がまだありません'); return; }
       const feed = document.getElementById('shorts-feed');
-      feed.innerHTML = works.map(w => `
-        <div class="shorts-item h-full w-full relative flex items-center justify-center bg-black">
-          <div class="w-full max-w-sm aspect-[9/16] relative bg-black flex items-center justify-center">
-            <iframe src="${getEmbedUrl(w.url)}" class="w-full h-full border-0" allowfullscreen></iframe>
-            <div class="absolute bottom-4 left-4 right-4 text-white space-y-2 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4">
-              <span class="px-2 py-0.5 bg-muji-red text-[10px] font-black font-en">${w.year}</span>
-              <h3 class="font-extrabold text-base leading-tight font-sans">${escapeHtml(w.title)}</h3>
+      feed.innerHTML = works.map(w => {
+        let mediaHtml = '';
+        if (w.sourceType === 'device' && w.url) {
+          mediaHtml = `<video src="${w.url}" controls class="w-full h-full object-cover"></video>`;
+        } else {
+          mediaHtml = `<iframe src="${getEmbedUrl(w.url)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+        }
+        return `
+          <div class="shorts-item h-full w-full relative flex items-center justify-center bg-black">
+            <div class="w-full max-w-sm aspect-[9/16] relative bg-black flex items-center justify-center">
+              ${mediaHtml}
+              <div class="absolute bottom-4 left-4 right-4 text-white space-y-2 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4">
+                <span class="px-2 py-0.5 bg-muji-red text-[10px] font-black font-en">${w.year}</span>
+                <h3 class="font-extrabold text-base leading-tight font-sans">${escapeHtml(w.title)}</h3>
+              </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
       document.getElementById('shorts-modal').classList.remove('hidden');
     };
     window.closeShortsModal = () => document.getElementById('shorts-modal').classList.add('hidden');
