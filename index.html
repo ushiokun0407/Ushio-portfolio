@@ -338,7 +338,7 @@
   <!-- FIREBASE & APP LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, onSnapshot, serverTimestamp, query, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCYZC3XOe4wzFFH5bMdEKQJYxDhyPRXF08",
@@ -354,7 +354,6 @@
     const db = getFirestore(app);
 
     let works = [];
-    let commentsMap = {};
     let currentFilter = 'all';
     let isAdmin = false;
     let passcode = 'u47Editor';
@@ -373,7 +372,6 @@
       preventEnterSubmit();
     });
 
-    // Prevent Form Submit on Enter key press inside inputs
     function preventEnterSubmit() {
       document.querySelectorAll('form input').forEach(input => {
         input.addEventListener('keydown', (e) => {
@@ -404,17 +402,6 @@
           setDoc(settingsRef, { ...settings, passcode });
         }
         renderSettings();
-      });
-
-      const commentsQuery = query(collection(db, 'comments'), orderBy('createdAt', 'asc'));
-      onSnapshot(commentsQuery, (snapshot) => {
-        commentsMap = {};
-        snapshot.forEach((docSnap) => {
-          const c = docSnap.data();
-          if (!commentsMap[c.videoId]) commentsMap[c.videoId] = [];
-          commentsMap[c.videoId].push({ id: docSnap.id, ...c });
-        });
-        renderWorks();
       });
     }
 
@@ -489,24 +476,12 @@
           `<span class="px-2 py-0.5 bg-muji-bg text-[10px] font-bold text-muji-sub border border-muji-border">#${t}</span>`
         ).join(' ');
 
-        const likes = w.likes || 0;
-        const comments = commentsMap[w.id] || [];
-
         let mediaHtml = '';
         if (w.sourceType === 'device' && w.url) {
           mediaHtml = `<video src="${w.url}" controls class="w-full h-full object-cover"></video>`;
         } else {
           mediaHtml = `<iframe src="${getEmbedUrl(w.url)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
         }
-
-        const commentsListHtml = comments.map(c => `
-          <div class="p-2 border-b border-muji-border/50 text-[11px] space-y-0.5">
-            <div class="flex justify-between text-muji-sub font-bold">
-              <span>${escapeHtml(c.name || '匿名')}</span>
-            </div>
-            <p class="text-muji-text font-normal whitespace-pre-line">${escapeHtml(c.text)}</p>
-          </div>
-        `).join('');
 
         return `
           <div class="bg-white border border-muji-border overflow-hidden flex flex-col justify-between group">
@@ -522,73 +497,17 @@
               </div>
             </div>
 
-            <div class="p-5 pt-0 space-y-3">
-              <div class="flex items-center justify-between border-t border-muji-border pt-3 text-xs font-bold">
-                <button onclick="likeWork('${w.id}')" class="flex items-center space-x-1 text-muji-sub hover:text-muji-red transition">
-                  <span>👍 グッド</span>
-                  <span class="bg-muji-bg px-2 py-0.5 border border-muji-border font-en font-black">${likes}</span>
-                </button>
-                <button onclick="toggleCommentBox('${w.id}')" class="flex items-center space-x-1 text-muji-sub hover:text-muji-text transition">
-                  <span>💬 コメント</span>
-                  <span class="bg-muji-bg px-2 py-0.5 border border-muji-border font-en font-black">${comments.length}</span>
-                </button>
-              </div>
-
-              <div id="comment-box-${w.id}" class="hidden space-y-3 pt-2 bg-muji-bg/50 p-3 border border-muji-border">
-                <div class="max-h-36 overflow-y-auto space-y-1">
-                  ${commentsListHtml.length > 0 ? commentsListHtml : '<p class="text-[11px] text-muji-sub italic">コメントはまだありません。</p>'}
-                </div>
-                <form onsubmit="postComment(event, '${w.id}')" class="space-y-2 pt-1">
-                  <input type="text" id="comment-name-${w.id}" placeholder="お名前 (任意)" class="w-full border border-muji-border p-1.5 text-[11px] bg-white focus:outline-none">
-                  <div class="flex space-x-2">
-                    <input type="text" id="comment-text-${w.id}" required placeholder="コメントを入力..." class="w-full border border-muji-border p-1.5 text-[11px] bg-white focus:outline-none">
-                    <button type="submit" class="px-3 py-1 bg-muji-red text-white text-[11px] font-bold whitespace-nowrap">送信</button>
-                  </div>
-                </form>
-              </div>
-
-              ${isAdmin ? `
-                <div class="flex justify-end space-x-2 pt-2 border-t border-muji-border">
+            ${isAdmin ? `
+              <div class="p-5 pt-0">
+                <div class="flex justify-end space-x-2 pt-3 border-t border-muji-border">
                   <button onclick="editWork('${w.id}')" class="text-xs font-bold text-muji-sub hover:text-muji-text">編集</button>
                   <button onclick="deleteWork('${w.id}')" class="text-xs font-bold text-muji-red hover:underline">削除</button>
                 </div>
-              ` : ''}
-            </div>
+              </div>
+            ` : ''}
           </div>
         `;
       }).join('');
-    };
-
-    window.likeWork = async function(id) {
-      try {
-        await updateDoc(doc(db, 'videos', id), { likes: increment(1) });
-      } catch (err) {
-        console.error("Like error:", err);
-      }
-    };
-
-    window.toggleCommentBox = function(id) {
-      const box = document.getElementById(`comment-box-${id}`);
-      if (box) box.classList.toggle('hidden');
-    };
-
-    window.postComment = async function(e, videoId) {
-      e.preventDefault();
-      const nameInput = document.getElementById(`comment-name-${videoId}`);
-      const textInput = document.getElementById(`comment-text-${videoId}`);
-      const name = nameInput.value.trim() || '匿名';
-      const text = textInput.value.trim();
-
-      if (!text) return;
-
-      try {
-        await addDoc(collection(db, 'comments'), {
-          videoId, name, text, createdAt: serverTimestamp()
-        });
-        textInput.value = '';
-      } catch (err) {
-        alert('コメント送信エラー: ' + err.message);
-      }
     };
 
     function getEmbedUrl(url) {
@@ -639,7 +558,7 @@
           await updateDoc(doc(db, 'videos', id), updateData);
         } else {
           await addDoc(collection(db, 'videos'), {
-            title, year, sourceType, url, desc, tags, likes: 0, createdAt: serverTimestamp()
+            title, year, sourceType, url, desc, tags, createdAt: serverTimestamp()
           });
         }
         closeWorkModal();
