@@ -147,10 +147,10 @@
             <span class="w-2 h-2 bg-muji-red inline-block"></span>
             <span>CREATIVE DIRECTOR / EDITOR</span>
           </div>
-          <h2 id="hero-tagline" class="text-3xl md:text-5xl font-extrabold tracking-tight font-sans leading-tight">
+          <h2 id="hero-tagline" class="text-3xl md:text-5xl font-extrabold tracking-tight font-sans leading-tight whitespace-pre-line">
             高校生3年間で制作する<br>100本の映像作品アーカイブ。
           </h2>
-          <p id="hero-concept" class="text-muji-sub font-bold text-sm md:text-base leading-relaxed">
+          <p id="hero-concept" class="text-muji-sub font-bold text-sm md:text-base leading-relaxed whitespace-pre-line">
             「日常の一瞬を、表現へ。」視点と構成力で切り取る映像制作プロジェクト。
           </p>
         </div>
@@ -268,13 +268,11 @@
           </div>
         </div>
 
-        <!-- YouTube Input -->
         <div id="youtube-input-group">
           <label class="block mb-1">YouTube URL <span class="text-muji-red">*</span></label>
           <input type="url" id="work-youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none">
         </div>
 
-        <!-- Device File Input -->
         <div id="device-input-group" class="hidden">
           <label class="block mb-1">動画ファイルを選択 (MP4, MOV等)</label>
           <input type="file" id="work-device-file" accept="video/*" class="w-full border border-muji-border p-2 bg-muji-bg text-xs">
@@ -314,16 +312,16 @@
           <input type="text" id="setting-profile-role" class="w-full border border-muji-border p-2.5">
         </div>
         <div>
-          <label class="block mb-1">メイン キャッチコピー</label>
-          <input type="text" id="setting-hero-tagline" class="w-full border border-muji-border p-2.5">
+          <label class="block mb-1">メイン キャッチコピー (改行可)</label>
+          <textarea id="setting-hero-tagline" rows="2" class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none"></textarea>
         </div>
         <div>
-          <label class="block mb-1">サブ コンセプト文</label>
-          <input type="text" id="setting-hero-concept" class="w-full border border-muji-border p-2.5">
+          <label class="block mb-1">サブ コンセプト文 (改行可)</label>
+          <textarea id="setting-hero-concept" rows="2" class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none"></textarea>
         </div>
         <div>
-          <label class="block mb-1">プロフィール詳細文章</label>
-          <textarea id="setting-profile-text" rows="4" class="w-full border border-muji-border p-2.5"></textarea>
+          <label class="block mb-1">プロフィール詳細文章 (改行可)</label>
+          <textarea id="setting-profile-text" rows="5" class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none"></textarea>
         </div>
         <div>
           <label class="block mb-1">管理者パスワード変更</label>
@@ -342,7 +340,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, onSnapshot, serverTimestamp, query, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase設定 (ushio-portfolio)
     const firebaseConfig = {
       apiKey: "AIzaSyCYZC3XOe4wzFFH5bMdEKQJYxDhyPRXF08",
       authDomain: "ushio-portfolio.firebaseapp.com",
@@ -360,11 +357,11 @@
     let commentsMap = {};
     let currentFilter = 'all';
     let isAdmin = false;
-    let passcode = 'u47Editor'; // パスワード統一
+    let passcode = 'u47Editor';
     let settings = {
       heroTagline: '高校生3年間で制作する\n100本の映像作品アーカイブ。',
       heroConcept: '「日常の一瞬を、表現へ。」視点と構成力で切り取る映像制作プロジェクト。',
-      profileName: '藤本 潮 (Ushio Fujimoto)',
+      profileName: '藤本 潮',
       profileRole: '映像制作 / 監督 / SYIO',
       profileText: '高校での3年間を通じて合計100本の動画作品を制作・記録するプロジェクトを行っています。'
     };
@@ -373,10 +370,21 @@
       initRealtimeSync();
       setupWelcomeDismiss();
       setupScrollProgress();
+      preventEnterSubmit();
     });
 
+    // Prevent Form Submit on Enter key press inside inputs
+    function preventEnterSubmit() {
+      document.querySelectorAll('form input').forEach(input => {
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        });
+      });
+    }
+
     function initRealtimeSync() {
-      // リアルタイム動画同期
       const q = query(collection(db, 'videos'), orderBy('createdAt', 'desc'));
       onSnapshot(q, (snapshot) => {
         works = [];
@@ -386,7 +394,6 @@
         renderWorks();
       });
 
-      // リアルタイム設定同期
       const settingsRef = doc(db, 'settings', 'main');
       onSnapshot(settingsRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -399,7 +406,6 @@
         renderSettings();
       });
 
-      // リアルタイムコメント同期
       const commentsQuery = query(collection(db, 'comments'), orderBy('createdAt', 'asc'));
       onSnapshot(commentsQuery, (snapshot) => {
         commentsMap = {};
@@ -498,7 +504,7 @@
             <div class="flex justify-between text-muji-sub font-bold">
               <span>${escapeHtml(c.name || '匿名')}</span>
             </div>
-            <p class="text-muji-text font-normal">${escapeHtml(c.text)}</p>
+            <p class="text-muji-text font-normal whitespace-pre-line">${escapeHtml(c.text)}</p>
           </div>
         `).join('');
 
@@ -511,12 +517,11 @@
               </div>
               <div class="p-5 space-y-3">
                 <h4 class="font-extrabold text-base leading-snug font-sans group-hover:text-muji-red transition">${escapeHtml(w.title)}</h4>
-                <p class="text-xs text-muji-sub font-bold leading-relaxed line-clamp-3">${escapeHtml(w.desc || '解説なし')}</p>
+                <p class="text-xs text-muji-sub font-bold leading-relaxed line-clamp-3 whitespace-pre-line">${escapeHtml(w.desc || '解説なし')}</p>
                 <div class="flex flex-wrap gap-1">${tagsHtml}</div>
               </div>
             </div>
 
-            <!-- LIKE & COMMENT CONTROLS -->
             <div class="p-5 pt-0 space-y-3">
               <div class="flex items-center justify-between border-t border-muji-border pt-3 text-xs font-bold">
                 <button onclick="likeWork('${w.id}')" class="flex items-center space-x-1 text-muji-sub hover:text-muji-red transition">
@@ -529,7 +534,6 @@
                 </button>
               </div>
 
-              <!-- COMMENT SECTION (HIDDEN BY DEFAULT) -->
               <div id="comment-box-${w.id}" class="hidden space-y-3 pt-2 bg-muji-bg/50 p-3 border border-muji-border">
                 <div class="max-h-36 overflow-y-auto space-y-1">
                   ${commentsListHtml.length > 0 ? commentsListHtml : '<p class="text-[11px] text-muji-sub italic">コメントはまだありません。</p>'}
@@ -557,9 +561,7 @@
 
     window.likeWork = async function(id) {
       try {
-        await updateDoc(doc(db, 'videos', id), {
-          likes: increment(1)
-        });
+        await updateDoc(doc(db, 'videos', id), { likes: increment(1) });
       } catch (err) {
         console.error("Like error:", err);
       }
@@ -581,10 +583,7 @@
 
       try {
         await addDoc(collection(db, 'comments'), {
-          videoId,
-          name,
-          text,
-          createdAt: serverTimestamp()
+          videoId, name, text, createdAt: serverTimestamp()
         });
         textInput.value = '';
       } catch (err) {
