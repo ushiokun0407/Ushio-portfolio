@@ -59,8 +59,6 @@
       animation: marquee 25s linear infinite;
     }
     .animate-marquee:hover { animation-play-state: paused; }
-    .shorts-container { scroll-snap-type: y mandatory; }
-    .shorts-item { scroll-snap-align: start; }
   </style>
 </head>
 <body class="antialiased text-muji-text selection:bg-muji-red selection:text-white">
@@ -105,10 +103,6 @@
       </div>
 
       <div class="flex items-center space-x-2 md:space-x-4">
-        <button onclick="openShortsModal()" class="flex items-center space-x-1.5 text-xs font-extrabold px-3 py-2 bg-muji-red text-white hover:bg-muji-redhover transition rounded-none">
-          <span>ショート再生</span>
-        </button>
-
         <div id="admin-controls" class="hidden flex items-center space-x-2">
           <button onclick="openAddModal()" class="text-xs font-extrabold px-3 py-2 bg-muji-text text-white hover:opacity-90 transition">
             ＋ 動画を追加
@@ -137,7 +131,7 @@
     </div>
   </div>
 
-  <!-- MAIN CONTAINER WITH GENEROUS SPACING -->
+  <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-12 md:py-20 space-y-20 md:space-y-28">
 
     <!-- HERO -->
@@ -223,15 +217,6 @@
   <footer class="border-t border-muji-border py-12 bg-white text-center text-xs font-bold text-muji-sub space-y-2">
     <p class="font-en">© USHIO FUJIMOTO - 100 FILMS ARCHIVE</p>
   </footer>
-
-  <!-- MODALS -->
-  <div id="shorts-modal" class="fixed inset-0 z-50 bg-black text-white hidden flex flex-col justify-between">
-    <div class="p-4 flex justify-between items-center z-10 bg-gradient-to-b from-black/80 to-transparent">
-      <span class="text-xs font-black tracking-widest font-en">SHORTS FEED</span>
-      <button onclick="closeShortsModal()" class="p-1 hover:text-muji-red transition">✕</button>
-    </div>
-    <div id="shorts-feed" class="shorts-container h-full w-full overflow-y-scroll overflow-x-hidden space-y-0"></div>
-  </div>
 
   <!-- WORK ADD/EDIT MODAL -->
   <div id="work-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
@@ -627,32 +612,7 @@
     window.openSettingsModal = () => document.getElementById('settings-modal').classList.remove('hidden');
     window.closeSettingsModal = () => document.getElementById('settings-modal').classList.add('hidden');
 
-    window.openShortsModal = function() {
-      if (works.length === 0) { alert('動画がまだありません'); return; }
-      const feed = document.getElementById('shorts-feed');
-      feed.innerHTML = works.map(w => {
-        let mediaHtml = '';
-        if (w.sourceType === 'device' && w.url) {
-          mediaHtml = `<video src="${w.url}" controls class="w-full h-full object-cover"></video>`;
-        } else {
-          mediaHtml = `<iframe src="${getEmbedUrl(w.url)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
-        }
-        return `
-          <div class="shorts-item h-full w-full relative flex items-center justify-center bg-black">
-            <div class="w-full max-w-sm aspect-[9/16] relative bg-black flex items-center justify-center">
-              ${mediaHtml}
-              <div class="absolute bottom-4 left-4 right-4 text-white space-y-2 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4">
-                <span class="px-2 py-0.5 bg-muji-red text-[10px] font-black font-en">${w.year}</span>
-                <h3 class="font-extrabold text-base leading-tight font-sans">${escapeHtml(w.title)}</h3>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-      document.getElementById('shorts-modal').classList.remove('hidden');
-    };
-    window.closeShortsModal = () => document.getElementById('shorts-modal').classList.add('hidden');
-    window.reopenWelcome = () => document.getElementById('welcome-overlay').classList.add('dismissed');
+    window.reopenWelcome = () => document.getElementById('welcome-overlay').classList.remove('dismissed');
 
     function setupWelcomeDismiss() {
       const overlay = document.getElementById('welcome-overlay');
