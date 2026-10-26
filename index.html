@@ -6,108 +6,144 @@
   <title>USHIO FUJIMOTO - FILM PORTFOLIO</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body { font-family: 'Noto Sans JP', sans-serif; }
   </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-zinc-800">
+<body class="bg-[#fcfbf9] text-zinc-800 min-h-screen flex flex-col justify-between antialiased selection:bg-zinc-200">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-zinc-900 text-zinc-100 text-xs py-2 px-6 flex justify-between items-center tracking-wider font-mono">
+    <span>HIGH SCHOOL 3-YEAR ARCHIVE</span>
+    <span>100 FILM PROJECT</span>
+  </div>
 
   <!-- Header -->
-  <header class="w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+  <header class="w-full border-b border-zinc-200/80 bg-[#fcfbf9]/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="font-semibold tracking-wider text-sm">USHIO FUJIMOTO</span>
-        <span class="text-xs text-zinc-500 hidden sm:inline">| 100 FILMS ARCHIVE</span>
+        <span class="font-bold tracking-widest text-base">藤本 潮</span>
+        <span class="text-xs text-zinc-400 font-mono">| 100 FILMS ARCHIVE</span>
       </div>
-      <div class="flex items-center space-x-4">
-        <button id="admin-toggle-btn" class="text-xs text-zinc-400 hover:text-white px-3 py-1.5 rounded border border-zinc-800 transition">
+      <div>
+        <button id="admin-toggle-btn" class="text-xs text-zinc-600 hover:text-zinc-900 px-3 py-1.5 rounded border border-zinc-300 transition">
           🔑 管理者モード
         </button>
       </div>
     </div>
   </header>
 
+  <!-- Marquee Banner -->
+  <div class="bg-zinc-100 border-b border-zinc-200 py-2 overflow-hidden whitespace-nowrap text-xs text-zinc-500 font-mono tracking-widest">
+    <div class="inline-block animate-marquee">
+      ★ USHIO FUJIMOTO FILM PORTFOLIO ・ 100 WORKS PROJECT IN HIGH SCHOOL ・ 2025 - 2027 ・ CONCEPT: MINIMAL & SINCERE ★ USHIO FUJIMOTO FILM PORTFOLIO ・ 100 WORKS PROJECT IN HIGH SCHOOL
+    </div>
+  </div>
+
   <!-- Main Content -->
-  <main class="max-w-6xl mx-auto px-6 py-12 w-full space-y-20">
+  <main class="max-w-5xl mx-auto px-6 py-12 w-full space-y-16">
 
     <!-- Hero Section -->
-    <section class="space-y-6">
-      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-400">
-        <span>CREATIVE DIRECTOR / EDITOR</span>
+    <section class="space-y-6 pt-4">
+      <div class="space-y-2">
+        <span class="text-xs text-zinc-400 tracking-widest font-mono">PORTFOLIO INTRO</span>
+        <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-zinc-900 leading-tight">
+          藤本 潮
+        </h1>
       </div>
-      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-white leading-tight">
-        高校生3年間で制作する<br>100本の映像作品アーカイブ。
-      </h1>
-      <p class="text-zinc-400 max-w-2xl text-base sm:text-lg leading-relaxed">
-        「日常の一瞬を、表現へ。」視点と構成力で切り取る映像制作プロジェクト。実写、MV、モーショングラフィックスを記録中。
+      <p class="text-zinc-600 max-w-2xl text-base leading-relaxed">
+        高校3年間で100本の動画を創る。<br>日常と非日常の境界線を記録する映像作品集。
       </p>
 
-      <!-- Progress -->
-      <div class="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/80 max-w-xl space-y-4">
-        <div class="flex justify-between items-center text-sm">
-          <span class="font-medium text-zinc-300">GRADUATION GOAL</span>
-          <span id="video-count-badge" class="text-emerald-400 font-semibold">0 / 100</span>
+      <!-- Progress Box -->
+      <div class="p-6 rounded-xl bg-white border border-zinc-200 max-w-md space-y-3 shadow-sm">
+        <div class="flex justify-between items-center text-xs tracking-wider font-mono">
+          <span class="text-zinc-500">GRADUATION GOAL</span>
+          <span id="video-count-badge" class="font-bold text-zinc-900">0 / 100</span>
         </div>
-        <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-          <div id="progress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%;"></div>
+        <div class="w-full bg-zinc-100 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar" class="bg-zinc-900 h-full transition-all duration-500" style="width: 0%;"></div>
         </div>
-        <p class="text-xs text-zinc-500">目標達成まで あと <span id="remaining-count">100</span> 本</p>
+        <p class="text-xs text-zinc-400">目標達成まで あと <span id="remaining-count" class="font-bold text-zinc-700">100</span> 本</p>
       </div>
     </section>
 
-    <!-- Admin Add Section (Hidden by default) -->
-    <section id="admin-panel" class="hidden p-6 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-4">
-      <h3 class="text-lg font-semibold text-white">🎬 動画作品を追加（リアルタイム同期）</h3>
-      <form id="add-video-form" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input type="text" id="video-title" placeholder="作品タイトル" required class="bg-zinc-950 border border-zinc-800 px-4 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
-          <input type="text" id="video-url" placeholder="YouTube URL (例: https://youtu.be/...)" required class="bg-zinc-950 border border-zinc-800 px-4 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
+    <!-- Profile Section -->
+    <section class="p-8 rounded-2xl bg-white border border-zinc-200/80 shadow-sm space-y-4">
+      <div class="space-y-1">
+        <span class="text-xs text-zinc-400 font-mono tracking-widest">PRODUCER PROFILE</span>
+        <h2 class="text-xl font-bold text-zinc-900">藤本 潮 <span class="text-sm font-normal text-zinc-500">(Ushio Fujimoto)</span></h2>
+      </div>
+      <p class="text-sm text-zinc-600 leading-relaxed max-w-3xl">
+        高校での3年間を通じて合計100本の動画作品を制作・記録するプロジェクトを行っています。実写ショートフィルム、プロモーションビデオ、モーショングラフィックスまで幅広く手掛け、洗練された構図と編集テンポ、質感にこだわった表現を追及しています。
+      </p>
+      <div class="flex flex-wrap gap-2 pt-2 text-xs text-zinc-600 font-mono">
+        <span class="px-2.5 py-1 bg-zinc-100 rounded">動画制作</span>
+        <span class="px-2.5 py-1 bg-zinc-100 rounded">ディレクション</span>
+        <span class="px-2.5 py-1 bg-zinc-100 rounded">DaVinci Resolve / Premiere Pro</span>
+        <span class="px-2.5 py-1 bg-zinc-100 rounded">埼玉ユースイノベーション機構 (SYIO)</span>
+      </div>
+    </section>
+
+    <!-- Admin Panel (Hidden by default) -->
+    <section id="admin-panel" class="hidden p-6 rounded-2xl bg-zinc-900 text-white space-y-4 shadow-lg">
+      <h3 class="text-base font-bold">🎬 動画作品を追加（Firestore同期）</h3>
+      <form id="add-video-form" class="space-y-3 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input type="text" id="video-title" placeholder="作品タイトル" required class="bg-zinc-800 border border-zinc-700 px-3 py-2 rounded text-white focus:outline-none focus:border-zinc-400">
+          <input type="text" id="video-url" placeholder="YouTube URL (例: https://youtu.be/...)" required class="bg-zinc-800 border border-zinc-700 px-3 py-2 rounded text-white focus:outline-none focus:border-zinc-400">
         </div>
-        <textarea id="video-desc" placeholder="作品の説明・こだわりなど" rows="2" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500"></textarea>
-        <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2 rounded-lg text-sm transition">Firestoreに保存して同期</button>
+        <textarea id="video-desc" placeholder="作品の説明・こだわりなど" rows="2" class="w-full bg-zinc-800 border border-zinc-700 px-3 py-2 rounded text-white focus:outline-none focus:border-zinc-400"></textarea>
+        <button type="submit" class="bg-white text-zinc-900 font-medium px-5 py-2 rounded text-xs hover:bg-zinc-200 transition">保存して公開</button>
       </form>
     </section>
 
-    <!-- Videos Grid Section -->
+    <!-- Archived Works -->
     <section class="space-y-6">
-      <h2 class="text-2xl font-bold tracking-tight text-white">ARCHIVED WORKS</h2>
-      <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Dynamically loaded from Firestore -->
+      <div class="flex justify-between items-end border-b border-zinc-200 pb-3">
+        <h2 class="text-xl font-bold tracking-tight text-zinc-900">ARCHIVED WORKS</h2>
+        <span id="works-count-label" class="text-xs font-mono text-zinc-400">0 WORKS</span>
       </div>
-      <div id="no-videos-msg" class="text-center py-16 border border-dashed border-zinc-800 rounded-2xl space-y-3">
-        <p class="text-zinc-400 font-medium">作品がまだ登録されていません</p>
-        <p class="text-xs text-zinc-600">右上「🔑 管理者モード」からパスワード（1234）を入力し、動画を追加してください。</p>
+
+      <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamically loaded -->
+      </div>
+
+      <div id="no-videos-msg" class="text-center py-16 border border-dashed border-zinc-300 rounded-2xl space-y-2 bg-white/50">
+        <h3 class="text-base font-medium text-zinc-700">作品がまだ登録されていません</h3>
+        <p class="text-xs text-zinc-400">右上「🔑 管理者モード」からパスワード（1234）を入力し、動画を追加してください。</p>
       </div>
     </section>
 
-    <!-- Contact / Feedback Box -->
-    <section class="p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-6 max-w-2xl">
-      <div>
-        <h3 class="text-xl font-bold text-white">ご意見箱・お問い合わせ</h3>
-        <p class="text-sm text-zinc-400 mt-1">動画の感想やリクエストを気軽に送ってください。</p>
+    <!-- Contact & Opinion -->
+    <section class="p-8 rounded-2xl bg-white border border-zinc-200/80 shadow-sm space-y-4 max-w-xl">
+      <div class="space-y-1">
+        <span class="text-xs text-zinc-400 font-mono tracking-widest">CONTACT & OPINION</span>
+        <h3 class="text-lg font-bold text-zinc-900">ご意見箱・お問い合わせ</h3>
+        <p class="text-xs text-zinc-500">動画の感想、次に作して欲しいリクエスト、制作のご依頼など、お気軽にお寄せください。</p>
       </div>
-      <form id="feedback-form" class="space-y-4">
-        <textarea id="feedback-text" placeholder="メッセージを入力..." rows="3" required class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500"></textarea>
-        <button type="submit" class="bg-zinc-800 hover:bg-zinc-700 text-white font-medium px-6 py-2.5 rounded-xl text-sm transition">送信する</button>
+      <form id="feedback-form" class="space-y-3">
+        <textarea id="feedback-text" placeholder="メッセージを入力..." rows="3" required class="w-full border border-zinc-200 px-3 py-2.5 rounded-lg text-sm text-zinc-800 focus:outline-none focus:border-zinc-400 bg-zinc-50/50"></textarea>
+        <button type="submit" class="bg-zinc-900 hover:bg-zinc-800 text-white font-medium px-5 py-2 rounded-lg text-xs transition">送信する</button>
       </form>
     </section>
 
   </main>
 
   <!-- Footer -->
-  <footer class="w-full border-t border-zinc-800/80 py-8 mt-20 text-center text-xs text-zinc-500 space-y-1">
+  <footer class="w-full border-t border-zinc-200 py-8 text-center text-xs text-zinc-400 space-y-1 font-mono">
     <p>© USHIO FUJIMOTO - 100 FILMS ARCHIVE</p>
     <p>All Rights Reserved.</p>
   </footer>
 
-  <!-- Firebase & App Logic -->
+  <!-- Firebase JavaScript Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // User's Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCYZC3XOe4wzFFH5bMdEKQJYxDhyPRXF08",
       authDomain: "ushio-portfolio.firebaseapp.com",
@@ -123,7 +159,7 @@
 
     let isAdmin = false;
 
-    // Admin Toggle
+    // Admin Mode Toggle
     document.getElementById('admin-toggle-btn').addEventListener('click', () => {
       if (!isAdmin) {
         const pass = prompt("管理者パスワードを入力してください:");
@@ -131,8 +167,7 @@
           isAdmin = true;
           document.getElementById('admin-panel').classList.remove('hidden');
           document.getElementById('admin-toggle-btn').textContent = "🔓 管理者モード中";
-          document.getElementById('admin-toggle-btn').classList.add('border-emerald-500', 'text-emerald-400');
-          alert("管理者モードが有効になりました！");
+          document.getElementById('admin-toggle-btn').classList.add('bg-zinc-900', 'text-white');
           renderVideos(window.latestVideos || []);
         } else if (pass !== null) {
           alert("パスワードが違います");
@@ -141,12 +176,11 @@
         isAdmin = false;
         document.getElementById('admin-panel').classList.add('hidden');
         document.getElementById('admin-toggle-btn').textContent = "🔑 管理者モード";
-        document.getElementById('admin-toggle-btn').classList.remove('border-emerald-500', 'text-emerald-400');
+        document.getElementById('admin-toggle-btn').classList.remove('bg-zinc-900', 'text-white');
         renderVideos(window.latestVideos || []);
       }
     });
 
-    // Extract YouTube ID helper
     function getYouTubeEmbedUrl(url) {
       if (!url) return '';
       let videoId = '';
@@ -158,7 +192,7 @@
       return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
     }
 
-    // Real-time listener for videos
+    // Real-time listener
     const q = query(collection(db, "videos"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
       const videos = [];
@@ -167,9 +201,9 @@
       });
       window.latestVideos = videos;
       
-      // Update counts
       const count = videos.length;
       document.getElementById('video-count-badge').textContent = `${count} / 100`;
+      document.getElementById('works-count-label').textContent = `${count} WORKS`;
       const percentage = Math.min((count / 100) * 100, 100);
       document.getElementById('progress-bar').style.width = `${percentage}%`;
       document.getElementById('remaining-count').textContent = Math.max(100 - count, 0);
@@ -177,7 +211,6 @@
       renderVideos(videos);
     });
 
-    // Render Videos Function
     function renderVideos(videos) {
       const grid = document.getElementById('videos-grid');
       const noMsg = document.getElementById('no-videos-msg');
@@ -192,29 +225,28 @@
       videos.forEach((video) => {
         const embedUrl = getYouTubeEmbedUrl(video.url);
         const card = document.createElement('div');
-        card.className = "bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col justify-between group";
+        card.className = "bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between";
         
         let mediaHtml = '';
         if (embedUrl) {
-          mediaHtml = `<div class="aspect-video w-full bg-zinc-950"><iframe src="${embedUrl}" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div>`;
+          mediaHtml = `<div class="aspect-video w-full bg-zinc-100"><iframe src="${embedUrl}" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div>`;
         } else {
-          mediaHtml = `<div class="aspect-video w-full bg-zinc-950 flex items-center justify-center text-zinc-600 text-xs">動画プレビューなし</div>`;
+          mediaHtml = `<div class="aspect-video w-full bg-zinc-100 flex items-center justify-center text-zinc-400 text-xs">動画プレビューなし</div>`;
         }
 
         card.innerHTML = `
           <div>
             ${mediaHtml}
-            <div class="p-5 space-y-2">
-              <h3 class="font-bold text-white text-lg">${escapeHtml(video.title)}</h3>
-              <p class="text-zinc-400 text-sm leading-relaxed">${escapeHtml(video.desc || '')}</p>
+            <div class="p-4 space-y-1">
+              <h3 class="font-bold text-zinc-900 text-base">${escapeHtml(video.title)}</h3>
+              <p class="text-zinc-500 text-xs leading-relaxed">${escapeHtml(video.desc || '')}</p>
             </div>
           </div>
-          ${isAdmin ? `<div class="p-4 pt-0 flex justify-end"><button data-id="${video.id}" class="delete-btn text-xs bg-red-950/50 hover:bg-red-900 text-red-300 px-3 py-1.5 rounded border border-red-900 transition">削除する</button></div>` : ''}
+          ${isAdmin ? `<div class="p-3 pt-0 flex justify-end"><button data-id="${video.id}" class="delete-btn text-xs bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded border border-red-200 transition">削除</button></div>` : ''}
         `;
         grid.appendChild(card);
       });
 
-      // Attach delete events if admin
       if (isAdmin) {
         document.querySelectorAll('.delete-btn').forEach(btn => {
           btn.addEventListener('click', async (e) => {
@@ -223,7 +255,7 @@
               try {
                 await deleteDoc(doc(db, "videos", id));
               } catch (err) {
-                alert("削除に失敗しました: " + err.message);
+                alert("削除エラー: " + err.message);
               }
             }
           });
@@ -235,7 +267,7 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
-    // Add Video Form Submit
+    // Form Handlers
     document.getElementById('add-video-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('video-title').value;
@@ -244,29 +276,24 @@
 
       try {
         await addDoc(collection(db, "videos"), {
-          title,
-          url,
-          desc,
-          createdAt: serverTimestamp()
+          title, url, desc, createdAt: serverTimestamp()
         });
         document.getElementById('add-video-form').reset();
-        alert("動画がFirestoreに保存され、全端末に同期されました！");
+        alert("動画を追加しました！全端末に同期されます。");
       } catch (err) {
         alert("保存エラー: " + err.message);
       }
     });
 
-    // Feedback Submit
     document.getElementById('feedback-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = document.getElementById('feedback-text').value;
       try {
         await addDoc(collection(db, "feedbacks"), {
-          text,
-          createdAt: serverTimestamp()
+          text, createdAt: serverTimestamp()
         });
         document.getElementById('feedback-form').reset();
-        alert("ご意見ありがとうございます！送信されました。");
+        alert("送信ありがとうございました！");
       } catch (err) {
         alert("送信エラー: " + err.message);
       }
