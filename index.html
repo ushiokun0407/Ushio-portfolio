@@ -93,7 +93,7 @@
   <!-- HEADER -->
   <header class="sticky top-0 z-40 bg-muji-bg/95 backdrop-blur-md border-b border-muji-border">
     <div id="scroll-progress" class="h-1 bg-muji-red w-0 transition-all duration-150"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <button onclick="reopenWelcome()" class="text-xs px-2.5 py-1 bg-muji-red text-white font-bold font-en uppercase hover:bg-muji-redhover transition">
           WELCOME
@@ -128,7 +128,7 @@
   </header>
 
   <!-- MARQUEE -->
-  <div class="bg-muji-red text-white py-2 overflow-hidden text-xs font-black font-en tracking-widest uppercase">
+  <div class="bg-muji-red text-white py-2.5 overflow-hidden text-xs font-black font-en tracking-widest uppercase">
     <div class="animate-marquee whitespace-nowrap">
       <span class="mx-6">★ USHIO FUJIMOTO FILM PORTFOLIO</span>
       <span class="mx-6">・ 100 WORKS PROJECT IN HIGH SCHOOL</span>
@@ -137,33 +137,34 @@
     </div>
   </div>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+  <!-- MAIN CONTAINER WITH GENEROUS SPACING -->
+  <main class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-12 md:py-20 space-y-20 md:space-y-28">
 
     <!-- HERO -->
-    <section class="border-b border-muji-border pb-12 space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div class="space-y-3 max-w-2xl">
+    <section class="border-b border-muji-border pb-16 space-y-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div class="space-y-4 max-w-2xl">
           <div class="inline-flex items-center space-x-2 text-xs font-black tracking-widest text-muji-red font-en uppercase">
             <span class="w-2 h-2 bg-muji-red inline-block"></span>
             <span>CREATIVE DIRECTOR / EDITOR</span>
           </div>
-          <h2 id="hero-tagline" class="text-3xl md:text-5xl font-extrabold tracking-tight font-sans leading-tight whitespace-pre-line">
+          <h2 id="hero-tagline" class="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight font-sans leading-tight whitespace-pre-line">
             高校生3年間で制作する<br>100本の映像作品アーカイブ。
           </h2>
-          <p id="hero-concept" class="text-muji-sub font-bold text-sm md:text-base leading-relaxed whitespace-pre-line">
+          <p id="hero-concept" class="text-muji-sub font-bold text-sm sm:text-base leading-relaxed whitespace-pre-line">
             「日常の一瞬を、表現へ。」視点と構成力で切り取る映像制作プロジェクト。
           </p>
         </div>
 
-        <div class="bg-white p-6 border border-muji-border shadow-sm min-w-[280px] space-y-3">
+        <div class="bg-white p-6 sm:p-8 border border-muji-border shadow-sm min-w-[280px] sm:min-w-[320px] space-y-4">
           <div class="flex justify-between items-baseline font-en">
             <span class="text-xs font-black tracking-wider text-muji-sub uppercase">GRADUATION GOAL</span>
-            <span id="counter-text" class="text-2xl font-black text-muji-red">0 / 100</span>
+            <span id="counter-text" class="text-2xl sm:text-3xl font-black text-muji-red">0 / 100</span>
           </div>
-          <div class="w-full bg-muji-bg h-3 overflow-hidden border border-muji-border">
+          <div class="w-full bg-muji-bg h-3.5 overflow-hidden border border-muji-border">
             <div id="counter-progress-bar" class="bg-muji-red h-full w-0 transition-all duration-500"></div>
           </div>
-          <p class="text-[11px] text-muji-sub font-bold text-right font-sans">
+          <p class="text-xs text-muji-sub font-bold text-right font-sans">
             目標達成まで あと <span id="counter-remaining" class="font-extrabold text-muji-text">100</span> 本
           </p>
         </div>
@@ -171,17 +172,17 @@
     </section>
 
     <!-- PROFILE -->
-    <section class="bg-white border border-muji-border p-8 md:p-10 shadow-sm relative">
+    <section class="bg-white border border-muji-border p-8 sm:p-12 shadow-sm relative">
       <div class="flex flex-col md:flex-row gap-8 items-start justify-between">
-        <div class="space-y-4 max-w-3xl">
+        <div class="space-y-5 max-w-3xl">
           <div class="flex items-center space-x-3">
             <span class="px-2.5 py-1 bg-muji-red text-white text-xs font-black tracking-widest font-en uppercase">PRODUCER PROFILE</span>
             <span id="profile-role" class="text-xs font-bold text-muji-sub font-sans">映像制作 / 監督 / SYIO</span>
           </div>
-          <h3 id="profile-name" class="text-2xl md:text-4xl font-extrabold tracking-tight font-sans">
+          <h3 id="profile-name" class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight font-sans">
             藤本 潮 <span class="text-sm font-bold text-muji-sub font-en block sm:inline sm:ml-2">(Ushio Fujimoto)</span>
           </h3>
-          <p id="profile-text" class="text-sm md:text-base font-extrabold leading-relaxed text-muji-text/90 font-sans whitespace-pre-line">
+          <p id="profile-text" class="text-sm sm:text-base font-extrabold leading-relaxed text-muji-text/90 font-sans whitespace-pre-line">
             高校での3年間を通じて合計100本の動画作品を制作・記録するプロジェクトを行っています。
           </p>
         </div>
@@ -193,23 +194,24 @@
       </div>
     </section>
 
-    <!-- FILMS GRID -->
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-muji-border pb-4">
+    <!-- FILMS GRID SECTION -->
+    <section class="space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-muji-border pb-6">
         <div class="flex flex-wrap gap-2 font-en" id="filter-container">
-          <button onclick="setYearFilter('all')" data-year="all" class="filter-btn px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-muji-red text-white border border-muji-red transition">ALL / すべて</button>
-          <button onclick="setYearFilter('2025')" data-year="2025" class="filter-btn px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition">2025 (高1)</button>
-          <button onclick="setYearFilter('2026')" data-year="2026" class="filter-btn px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition">2026 (高2)</button>
-          <button onclick="setYearFilter('2027')" data-year="2027" class="filter-btn px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition">2027 (高3)</button>
+          <button onclick="setYearFilter('all')" data-year="all" class="filter-btn px-4 sm:px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-muji-red text-white border border-muji-red transition">ALL / すべて</button>
+          <button onclick="setYearFilter('2025')" data-year="2025" class="filter-btn px-4 sm:px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition">2025 (高1)</button>
+          <button onclick="setYearFilter('2026')" data-year="2026" class="filter-btn px-4 sm:px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition">2026 (高2)</button>
+          <button onclick="setYearFilter('2027')" data-year="2027" class="filter-btn px-4 sm:px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition">2027 (高3)</button>
         </div>
-        <div class="relative w-full sm:w-64">
-          <input type="text" id="search-input" oninput="renderWorks()" placeholder="作品タイトル・タグを検索..." class="w-full bg-white border border-muji-border px-3 py-2 text-xs font-bold focus:outline-none focus:border-muji-red">
+        <div class="relative w-full sm:w-72">
+          <input type="text" id="search-input" oninput="renderWorks()" placeholder="作品タイトル・タグを検索..." class="w-full bg-white border border-muji-border px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-muji-red">
         </div>
       </div>
 
-      <div id="works-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+      <!-- WORKS GRID: MOBILE 2 COLS, DESKTOP 3 COLS -->
+      <div id="works-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8"></div>
 
-      <div id="empty-state" class="hidden text-center py-20 bg-white border border-muji-border p-8 space-y-4">
+      <div id="empty-state" class="hidden text-center py-24 bg-white border border-muji-border p-8 space-y-4">
         <div class="text-muji-red text-4xl font-en font-black">0 WORKS</div>
         <h3 class="text-xl font-extrabold font-sans">作品がまだ登録されていません</h3>
         <p class="text-xs font-bold text-muji-sub max-w-md mx-auto">右上にある鍵アイコン（編集モード）を有効にし、「＋ 動画を追加」ボタンから最初の映像作品を追加してください。</p>
@@ -218,7 +220,7 @@
 
   </main>
 
-  <footer class="border-t border-muji-border py-10 bg-white text-center text-xs font-bold text-muji-sub space-y-2">
+  <footer class="border-t border-muji-border py-12 bg-white text-center text-xs font-bold text-muji-sub space-y-2">
     <p class="font-en">© USHIO FUJIMOTO - 100 FILMS ARCHIVE</p>
   </footer>
 
@@ -233,7 +235,7 @@
 
   <!-- WORK ADD/EDIT MODAL -->
   <div id="work-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white border border-muji-border w-full max-w-lg p-6 space-y-6 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white border border-muji-border w-full max-w-lg p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-muji-border pb-3">
         <h3 id="modal-title" class="text-lg font-extrabold font-sans">動画作品を追加</h3>
         <button onclick="closeWorkModal()" class="text-muji-sub hover:text-muji-text font-bold text-xl">&times;</button>
@@ -244,7 +246,7 @@
           <label class="block mb-1">作品タイトル <span class="text-muji-red">*</span></label>
           <input type="text" id="work-title" required class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none">
         </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block mb-1">制作年（学年） <span class="text-muji-red">*</span></label>
             <select id="work-year" required class="w-full border border-muji-border p-2.5 focus:border-muji-red focus:outline-none">
@@ -258,11 +260,11 @@
             <div class="flex items-center space-x-3 pt-2">
               <label class="inline-flex items-center space-x-1 cursor-pointer">
                 <input type="radio" name="video-source-type" value="youtube" checked onchange="toggleVideoSourceInput()" class="accent-muji-red">
-                <span>YouTube URL</span>
+                <span>YouTube</span>
               </label>
               <label class="inline-flex items-center space-x-1 cursor-pointer">
                 <input type="radio" name="video-source-type" value="device" onchange="toggleVideoSourceInput()" class="accent-muji-red">
-                <span>デバイスから指定</span>
+                <span>デバイス</span>
               </label>
             </div>
           </div>
@@ -297,7 +299,7 @@
 
   <!-- SETTINGS MODAL -->
   <div id="settings-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white border border-muji-border w-full max-w-lg p-6 space-y-6 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white border border-muji-border w-full max-w-lg p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-muji-border pb-3">
         <h3 class="text-lg font-extrabold font-sans">サイト設定・プロフィール編集</h3>
         <button onclick="closeSettingsModal()" class="text-muji-sub hover:text-muji-text font-bold text-xl">&times;</button>
@@ -408,7 +410,7 @@
     function renderSettings() {
       document.getElementById('hero-tagline').innerText = settings.heroTagline;
       document.getElementById('hero-concept').innerText = settings.heroConcept;
-      document.getElementById('profile-name').innerHTML = settings.profileName + ' <span class="text-sm font-bold text-muji-sub font-en block sm:inline sm:ml-2">(Ushio Fujimoto)</span>';
+      document.getElementById('profile-name').innerHTML = settings.profileName + ' <span class="text-xs sm:text-sm font-bold text-muji-sub font-en block sm:inline sm:ml-2">(Ushio Fujimoto)</span>';
       document.getElementById('profile-role').innerText = settings.profileRole;
       document.getElementById('profile-text').innerText = settings.profileText;
 
@@ -440,9 +442,9 @@
       currentFilter = year;
       document.querySelectorAll('.filter-btn').forEach(btn => {
         if (btn.getAttribute('data-year') === year) {
-          btn.className = 'filter-btn px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-muji-red text-white border border-muji-red transition';
+          btn.className = 'filter-btn px-4 sm:px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-muji-red text-white border border-muji-red transition';
         } else {
-          btn.className = 'filter-btn px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition';
+          btn.className = 'filter-btn px-4 sm:px-5 py-2.5 font-extrabold text-xs uppercase tracking-wider bg-white text-muji-text border border-muji-border hover:border-muji-red transition';
         }
       });
       renderWorks();
@@ -473,7 +475,7 @@
       emptyState.classList.add('hidden');
       grid.innerHTML = filtered.map(w => {
         const tagsHtml = (w.tags || '').split(',').map(t => t.trim()).filter(Boolean).map(t => 
-          `<span class="px-2 py-0.5 bg-muji-bg text-[10px] font-bold text-muji-sub border border-muji-border">#${t}</span>`
+          `<span class="px-1.5 sm:px-2 py-0.5 bg-muji-bg text-[9px] sm:text-[10px] font-bold text-muji-sub border border-muji-border">#${t}</span>`
         ).join(' ');
 
         let mediaHtml = '';
@@ -484,24 +486,24 @@
         }
 
         return `
-          <div class="bg-white border border-muji-border overflow-hidden flex flex-col justify-between group">
+          <div class="bg-white border border-muji-border overflow-hidden flex flex-col justify-between group shadow-sm">
             <div>
               <div class="relative bg-black aspect-video overflow-hidden">
                 ${mediaHtml}
-                <span class="absolute top-2 left-2 px-2.5 py-1 bg-muji-red text-white font-en font-black text-[10px] uppercase pointer-events-none">${w.year}</span>
+                <span class="absolute top-2 left-2 px-2 py-0.5 bg-muji-red text-white font-en font-black text-[9px] sm:text-[10px] uppercase pointer-events-none">${w.year}</span>
               </div>
-              <div class="p-5 space-y-3">
-                <h4 class="font-extrabold text-base leading-snug font-sans group-hover:text-muji-red transition">${escapeHtml(w.title)}</h4>
-                <p class="text-xs text-muji-sub font-bold leading-relaxed line-clamp-3 whitespace-pre-line">${escapeHtml(w.desc || '解説なし')}</p>
-                <div class="flex flex-wrap gap-1">${tagsHtml}</div>
+              <div class="p-3 sm:p-5 space-y-2 sm:space-y-3">
+                <h4 class="font-extrabold text-xs sm:text-base leading-snug font-sans group-hover:text-muji-red transition line-clamp-2">${escapeHtml(w.title)}</h4>
+                <p class="text-[11px] sm:text-xs text-muji-sub font-bold leading-relaxed line-clamp-2 sm:line-clamp-3 whitespace-pre-line">${escapeHtml(w.desc || '解説なし')}</p>
+                <div class="flex flex-wrap gap-1 pt-1">${tagsHtml}</div>
               </div>
             </div>
 
             ${isAdmin ? `
-              <div class="p-5 pt-0">
-                <div class="flex justify-end space-x-2 pt-3 border-t border-muji-border">
-                  <button onclick="editWork('${w.id}')" class="text-xs font-bold text-muji-sub hover:text-muji-text">編集</button>
-                  <button onclick="deleteWork('${w.id}')" class="text-xs font-bold text-muji-red hover:underline">削除</button>
+              <div class="p-3 sm:p-5 pt-0">
+                <div class="flex justify-end space-x-2 pt-2.5 sm:pt-3 border-t border-muji-border">
+                  <button onclick="editWork('${w.id}')" class="text-[11px] sm:text-xs font-bold text-muji-sub hover:text-muji-text">編集</button>
+                  <button onclick="deleteWork('${w.id}')" class="text-[11px] sm:text-xs font-bold text-muji-red hover:underline">削除</button>
                 </div>
               </div>
             ` : ''}
@@ -647,10 +649,10 @@
           </div>
         `;
       }).join('');
-      document.getElementById('shorts-modal').classList.add('hidden');
+      document.getElementById('shorts-modal').classList.remove('hidden');
     };
     window.closeShortsModal = () => document.getElementById('shorts-modal').classList.add('hidden');
-    window.reopenWelcome = () => document.getElementById('welcome-overlay').classList.remove('dismissed');
+    window.reopenWelcome = () => document.getElementById('welcome-overlay').classList.add('dismissed');
 
     function setupWelcomeDismiss() {
       const overlay = document.getElementById('welcome-overlay');
